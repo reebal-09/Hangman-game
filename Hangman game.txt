@@ -1,0 +1,175 @@
+#include <iostream>
+#include <string>
+#include <ctime>    
+using namespace std;
+
+const int NUM_WORDS = 6;
+const string WORDS[NUM_WORDS] = { "cplusplus", "programming", "hangman", "computer", "algorithm", "software" };
+
+void playHangman();
+bool checkGuess(char guess, const string& secretWord, string& guessedWord);
+bool isGameOver(const string& guessedWord, const string& secretWord);
+void displayHangman(int attempts);
+
+int main() {
+	char playAgain = 'y';
+
+	srand(static_cast<unsigned int>(time(nullptr)));  
+
+	while (tolower(playAgain) == 'y') {
+		system("color 0B");  
+		playHangman();
+
+		cout << "Do you want to play again? (y/n): ";
+		cin >> playAgain;
+		cin.ignore();  
+		cout << endl;
+	}
+
+	cout << "Thanks for playing Hangman!\n";
+
+	return 0;
+}
+
+void playHangman() {
+	// Choose a random word index
+	int randomIndex = time(nullptr) % NUM_WORDS;  
+	string secretWord = WORDS[randomIndex];
+
+	int maxAttempts = 6;
+	int attempts = 0;
+
+	string guessedWord(secretWord.length(), '-');
+	cout << "Welcome to Hangman!\n";
+	cout << "Guess the word. It has " << secretWord.length() << " letters.\n\n";
+
+	while (!isGameOver(guessedWord, secretWord) && attempts < maxAttempts) {
+		displayHangman(attempts);
+		cout << "Secret word: " << guessedWord << endl;
+		cout << "Attempts left: " << maxAttempts - attempts << endl;
+
+		char guess;
+		cout << "Enter your guess: ";
+		cin >> guess;
+		cin.ignore();
+
+		if (!checkGuess(guess, secretWord, guessedWord)) {
+			attempts++;
+
+			cout << "Incorrect guess!\n";
+		}
+		cout << endl;
+	}
+
+	displayHangman(attempts);
+
+	if (isGameOver(guessedWord, secretWord)) {
+		cout << "Congratulations! You guessed the word: " << secretWord << endl;
+	}
+	else {
+		cout << "Sorry, you ran out of attempts. The word was: " << secretWord << endl;
+	}
+}
+
+bool checkGuess(char guess, const string& secretWord, string& guessedWord) {
+	bool found = false;
+	for (size_t i = 0; i < secretWord.length(); ++i) {
+		if (secretWord[i] == guess) {
+			guessedWord[i] = guess;
+			found = true;
+		}
+	}
+	return found;
+}
+
+bool isGameOver(const string& guessedWord, const string& secretWord) {
+	return (guessedWord == secretWord);
+}
+
+void displayHangman(int attempts) {
+	
+	switch (attempts) {
+	case 0:
+		system("color 0E");  
+		break;
+	case 1:
+		system("color 0C");  
+		break;
+	case 2:
+		system("color 0A");  
+		break;
+	case 3:
+		system("color 0B");  
+		break;
+	case 4:
+		system("color 0D");  
+		break;
+	case 5:
+		system("color 0F");  
+		break;
+	case 6:
+		system("color 09");  
+		break;
+	}
+
+	
+	switch (attempts) {
+	case 0:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		break;
+	case 1:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		break;
+	case 2:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|         |    \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		break;
+	case 3:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|        /|    \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		break;
+	case 4:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|        /|\\  \n";
+		cout << "|               \n";
+		cout << "|               \n";
+		break;
+	case 5:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|        /|\\  \n";
+		cout << "|        /     \n";
+		cout << "|               \n";
+		break;
+	case 6:
+		cout << " _     \n";
+		cout << "|         |    \n";
+		cout << "|         O    \n";
+		cout << "|        /|\\  \n";
+		cout << "|        / \\  \n";
+		cout << "|               \n";
+		break;
+	}
+	cout << endl;
+    }
